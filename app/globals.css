@@ -2,7 +2,8 @@
 
 :root {
   --background: #87c9f8;
-  --foreground: black;
+  --foreground: white;
+  --editor-background: #101117;
 }
 
 @theme inline {
@@ -10,12 +11,14 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-quantico: var(--font-quantico);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #101117;
     --foreground: #ededed;
+    --editor-background: #101117;
   }
 }
 
@@ -23,4 +26,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+button{
+  cursor: pointer;
 }
