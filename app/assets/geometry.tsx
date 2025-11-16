@@ -6,6 +6,7 @@ import {
     DodecahedronGeometry,
     PlaneGeometry
 } from "three"
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 export const icosahedron = new IcosahedronGeometry(1);
 export const sphere = new SphereGeometry(1);

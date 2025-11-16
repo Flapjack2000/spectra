@@ -33,9 +33,9 @@ void main() {
   vec3 light = normalize(vec3(1.0, 1.0, 1.0));
   float dProd = max(0.0, dot(vNormal, light));
   
-  vec3 color = vec3(0.5 + 0.5 * sin(time + vPosition.x * 2.0),
-                    0.5 + 0.5 * sin(time + vPosition.y * 2.0 + 2.0),
-                    0.5 + 0.5 * sin(time + vPosition.z * 2.0 + 4.0));
+  vec3 color = vec3(0.5 + 0.5 * sin(uTime + vPosition.x * 2.0),
+                    0.5 + 0.5 * sin(uTime + vPosition.y * 2.0 + 2.0),
+                    0.5 + 0.5 * sin(uTime + vPosition.z * 2.0 + 4.0));
   
   gl_FragColor = vec4(color * dProd, 1.0);
 }`.trim();
