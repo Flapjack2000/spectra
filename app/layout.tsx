@@ -19,8 +19,8 @@ const quantico = Quantico({
 })
 
 export const metadata: Metadata = {
-  title: "Spectra | a web based GLSL shader editor made with three.js & next.js",
-  description: "by Zach Williams",
+  title: "Spectra | GLSL shader editor | Zach Williams",
+  description: "a web based GLSL shader editor made with three.js & next.js",
 };
 
 export default function RootLayout({

@@ -4,6 +4,8 @@
   --background: #87c9f8;
   --foreground: white;
   --editor-background: #101117;
+  --editor-background-secondary: #1e1e1e;
+  --active:#4a5283;
 }
 
 @theme inline {
@@ -18,7 +20,8 @@
   :root {
     --background: #101117;
     --foreground: #ededed;
-    --editor-background: #101117;
+    --editor-background: #2f3035;
+    --active:#1e2e2e;
   }
 }
 
