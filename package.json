@@ -15,15 +15,18 @@
     "glslify": "^7.1.1",
     "gltf-loader": "^1.0.0",
     "next": "16.0.3",
+    "prismjs": "^1.30.0",
     "raw-loader": "^4.0.2",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-icons": "^5.5.0",
+    "react-simple-code-editor": "^0.14.1",
     "three": "^0.181.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/prismjs": "^1.26.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
