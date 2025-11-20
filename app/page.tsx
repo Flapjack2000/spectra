@@ -330,31 +330,35 @@ export default function Home() {
           </div>
 
 
-          <div className="bg-(--editor-background) h-[80%] p-2 rounded rounded-tl-none">
+          <div className="bg-(--editor-background) h-[80%] p-2 rounded rounded-tl-none overflow-hidden">
             {activeTab === "vertex" &&
-              <Editor
-                value={vertexCode}
-                onValueChange={setVertexCode}
-                highlight={code => Prism.highlight(code, Prism.languages.glsl, 'glsl')} padding={16}
-                className="h-full w-full bg-(--editor-background-secondary) font-mono text-xs leading-relaxed"
-                style={{
-                  fontFamily: 'monospace',
-                  fontSize: '12px',
-                }}
-              />
+              <div className="h-full w-full overflow-auto">
+                <Editor
+                  value={vertexCode}
+                  onValueChange={setVertexCode}
+                  highlight={code => Prism.highlight(code, Prism.languages.glsl, 'glsl')} padding={16}
+                  className="w-full bg-(--editor-background-secondary) font-mono text-xs leading-relaxed"
+                  style={{
+                    fontFamily: 'monospace',
+                    fontSize: '12px',
+                  }}
+                />
+              </div>
             }
 
             {activeTab === "fragment" &&
-              <Editor
-                value={fragmentCode}
-                onValueChange={setFragmentCode}
-                highlight={code => Prism.highlight(code, Prism.languages.glsl, 'glsl')} padding={16}
-                className="h-full w-full bg-(--editor-background-secondary) font-mono text-xs leading-relaxed"
-                style={{
-                  fontFamily: 'monospace',
-                  fontSize: '12px',
-                }}
-              />
+              <div className="h-full w-full overflow-auto">
+                <Editor
+                  value={fragmentCode}
+                  onValueChange={setFragmentCode}
+                  highlight={code => Prism.highlight(code, Prism.languages.glsl, 'glsl')} padding={16}
+                  className="w-full bg-(--editor-background-secondary) font-mono text-xs leading-relaxed"
+                  style={{
+                    fontFamily: 'monospace',
+                    fontSize: '12px',
+                  }}
+                />
+              </div>
             }
 
             {activeTab === "options" &&
