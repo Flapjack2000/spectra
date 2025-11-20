@@ -7,7 +7,7 @@ import * as presetGeometries from "./assets/geometry";
 import { DodecahedronIcon, IcosahedronIcon, CubeIcon, SphereIcon, PlaneIcon, KnotIcon } from "./assets/icons";
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import Prism from 'prismjs';
-import 'prismjs/themes/prism-tomorrow.css';
+import 'prismjs/themes/prism-funky.css';
 import dynamic from "next/dynamic";
 
 const Editor = dynamic(() => import('react-simple-code-editor'), {
