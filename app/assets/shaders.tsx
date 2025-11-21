@@ -139,16 +139,17 @@ export const v4 = `
 uniform float uTime;
 varying vec3 vNormal;
 varying vec3 vPosition;
+varying float vPattern;
 
 void main() {
   vNormal = normal;
   vPosition = position;
   
   // Jittery motion based on normal direction
-  float spike = sin(position.x * 5.0 + uTime) * 
-                sin(position.y * 5.0 + uTime) * 
-                sin(position.z * 5.0 + uTime);
-  vec3 newPosition = position + normal * spike * 0.3;
+  vPattern = sin(position.x * 5.0 + uTime * 2.0) * 
+                sin(position.y * 5.0 + uTime * 2.0) * 
+                sin(position.z * 5.0 + uTime * 2.0);
+  vec3 newPosition = position + normal * vPattern * 0.3;
   
   gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
 }`.trim();
@@ -157,6 +158,7 @@ export const f4 = `
 uniform float uTime;
 varying vec3 vNormal;
 varying vec3 vPosition;
+varying float vPattern;
 
 void main() {
   // Base colors
@@ -164,10 +166,7 @@ void main() {
   vec3 color2 = vec3(0.4, 0.1, 0.6);
   
   // Color variation based on spike pattern
-  float pattern = sin(vPosition.x * 5.0 + uTime) * 
-                  sin(vPosition.y * 5.0 + uTime) * 
-                  sin(vPosition.z * 5.0 + uTime);
-  float mixFactor = pattern * 0.5 + 0.5;
+  float mixFactor = vPattern * 0.5 + 0.5;
   
   vec3 color = mix(color1, color2, mixFactor);
   

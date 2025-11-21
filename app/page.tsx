@@ -41,11 +41,10 @@ export default function Home() {
   };
 
 
-
+  const AUTO_ROTATE = false;
   const LIGHT_COLOR = new THREE.Color(1, 1, 1);
   const LIGHT_INTENSITY = 1.2;
   const CODE_UPDATE_TIMEOUT = 500;
-  const UTIME_SPEED_MULTIPLIER = 2;
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -59,9 +58,6 @@ export default function Home() {
   const [vertexCode, setVertexCode] = useState(presetShaders.v0);
   const [fragmentCode, setFragmentCode] = useState(presetShaders.f0);
   const [geometry, setGeometry] = useState<GeometryType>(presetGeometries.icosahedron);
-
-  // Other settings
-  const [autoRotate, setAutoRotate] = useState<Boolean>(false);
 
   const [hasError, setHasError] = useState<Boolean>(false);
   const [errorHistory, setErrorHistory] = useState<string[]>([]);
@@ -170,11 +166,11 @@ export default function Home() {
       loopRef.current = requestAnimationFrame(loop);
 
       if (materialRef.current && materialRef.current.uniforms.uTime) {
-        materialRef.current.uniforms.uTime.value += 0.01 * UTIME_SPEED_MULTIPLIER;
+        materialRef.current.uniforms.uTime.value += 0.01;
       }
 
       // Auto rotation (around z axis)
-      if (meshRef.current && autoRotate) {
+      if (meshRef.current && AUTO_ROTATE) {
         meshRef.current.rotation.z += 0.01;
       }
 
