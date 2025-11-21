@@ -358,115 +358,117 @@ export default function Home() {
             }
 
             {activeTab === "options" &&
-              <div className="*:*:duration-200 *:*:hover:bg-(--active) *:*:transition-colors h-fit w-full flex-1 flex-col bg-(--editor-background-secondary) text-foreground border-none p-4 font-mono text-xs">
-                <div className="flex flex-1 w-full">
-                  <button
-                    className="flex flex-1 flex-col items-center rounded border p-4 m-1"
-                    onClick={() => { setGeometry(presetGeometries.sphere) }}
-                  >
-                    <p>Sphere</p>
-                    <SphereIcon strokeWidth={2} size={24} fill={'var(--foreground)'} />
-                  </button>
-
-                  <button
-                    className="flex flex-1 flex-col items-center rounded border p-4 m-1"
-                    onClick={() => { setGeometry(presetGeometries.cube) }}
-                  >
-                    <p>Cube</p>
-                    <CubeIcon strokeWidth={2} size={24} fill={'var(--foreground)'} />
-                  </button>
-                </div>
-
-                <div className="flex flex-1 w-full">
-                  <button
-                    className="flex flex-1 flex-col items-center rounded border p-4 m-1"
-                    onClick={() => { setGeometry(presetGeometries.dodecahedron) }}
-                  >
-                    <p>Dodecahedron</p>
-                    <DodecahedronIcon strokeWidth={2} size={24} fill={'var(--foreground)'} />
-                  </button>
-
-                  <button
-                    className="flex flex-1 flex-col items-center rounded border p-4 m-1"
-                    onClick={() => { setGeometry(presetGeometries.icosahedron) }}
-                  >
-                    <p>Icosahedron</p>
-                    <IcosahedronIcon strokeWidth={2} size={24} fill={'var(--foreground)'} />
-                  </button>
-                </div>
-
-                <div className="flex flex-1 w-full">
-                  <button
-                    className="flex flex-1 flex-col items-center rounded border p-4 m-1"
-                    onClick={() => { setGeometry(presetGeometries.plane) }}
-                  >
-                    <p>Plane</p>
-                    <PlaneIcon strokeWidth={2} size={24} fill={'var(--foreground)'} />
-                  </button>
-
-                  <button
-                    className="flex flex-1 flex-col items-center rounded border p-4 m-1"
-                    onClick={() => { setGeometry(presetGeometries.knot) }}
-                  >
-                    <p>Torus Knot</p>
-                    <KnotIcon strokeWidth={2} size={24} fill={'var(--foreground)'} />
-                  </button>
-                </div>
-
-                <div className="flex flex-1 w-full">
-                  <button
-                    className="flex flex-1 justify-center rounded border p-4 m-1"
-                    onClick={() => {
-                      setVertexCode(presetShaders.v0);
-                      setFragmentCode(presetShaders.f0);
-                      materialRef.current?.dispose();
-                      materialRef.current = initialMaterial();
-                    }}
-                  >
-                    <p>Reset Shaders</p>
-                  </button>
-                  <button
-                    className="flex flex-1 justify-center rounded border p-4 m-1"
-                    onClick={() => {
-                      if (!meshRef.current || !materialRef.current) return;
-
-                      materialRef.current.dispose();
-                      materialRef.current = freshMaterial();
-                      meshRef.current.material = materialRef.current;
-                    }}
-                  >
-                    <p>Reset Uniforms</p>
-                  </button>
-                </div>
-
-                <div className="flex flex-1 w-full">
-                  <button
-                    className="flex flex-1 justify-center rounded border p-4 m-1"
-                    onClick={() => { setVertexCode(presetShaders.v1); setFragmentCode(presetShaders.f1) }}
-                  >
-                    <p>Example 1 - Twist</p>
-                  </button>
-                  <button
-                    className="flex flex-1 justify-center rounded border p-4 m-1"
-                    onClick={() => { setVertexCode(presetShaders.v2); setFragmentCode(presetShaders.f2) }}
-                  >
-                    <p>Example 2 - Pulse</p>
-                  </button>
-                </div>
-
-                <div className="flex flex-1 w-full">
-                  <button
-                    className="flex flex-1 justify-center rounded border p-4 m-1"
-                    onClick={() => { setVertexCode(presetShaders.v3); setFragmentCode(presetShaders.f3) }}
-                  >
-                    <p>Example 3 - Wave</p>
-                  </button>
-                  <button
-                    className="flex flex-1 justify-center rounded border p-4 m-1"
-                    onClick={() => { setVertexCode(presetShaders.v4); setFragmentCode(presetShaders.f4) }}
-                  >
-                    <p>Example 4 - Jitter</p>
-                  </button>
+              <div className="h-full w-full overflow-auto">
+                <div className="*:*:duration-200 *:*:hover:bg-(--active) *:*:transition-colors h-fit w-full flex-1 flex-col bg-(--editor-background-secondary) text-foreground border-none p-4 font-mono text-xs">
+                  <div className="flex flex-1 w-full">
+                    <button
+                      className="flex flex-1 flex-col items-center rounded border p-4 m-1"
+                      onClick={() => { setGeometry(presetGeometries.sphere) }}
+                    >
+                      <p>Sphere</p>
+                      <SphereIcon strokeWidth={2} size={24} fill={'var(--foreground)'} />
+                    </button>
+  
+                    <button
+                      className="flex flex-1 flex-col items-center rounded border p-4 m-1"
+                      onClick={() => { setGeometry(presetGeometries.cube) }}
+                    >
+                      <p>Cube</p>
+                      <CubeIcon strokeWidth={2} size={24} fill={'var(--foreground)'} />
+                    </button>
+                  </div>
+  
+                  <div className="flex flex-1 w-full">
+                    <button
+                      className="flex flex-1 flex-col items-center rounded border p-4 m-1"
+                      onClick={() => { setGeometry(presetGeometries.dodecahedron) }}
+                    >
+                      <p>Dodecahedron</p>
+                      <DodecahedronIcon strokeWidth={2} size={24} fill={'var(--foreground)'} />
+                    </button>
+  
+                    <button
+                      className="flex flex-1 flex-col items-center rounded border p-4 m-1"
+                      onClick={() => { setGeometry(presetGeometries.icosahedron) }}
+                    >
+                      <p>Icosahedron</p>
+                      <IcosahedronIcon strokeWidth={2} size={24} fill={'var(--foreground)'} />
+                    </button>
+                  </div>
+  
+                  <div className="flex flex-1 w-full">
+                    <button
+                      className="flex flex-1 flex-col items-center rounded border p-4 m-1"
+                      onClick={() => { setGeometry(presetGeometries.plane) }}
+                    >
+                      <p>Plane</p>
+                      <PlaneIcon strokeWidth={2} size={24} fill={'var(--foreground)'} />
+                    </button>
+  
+                    <button
+                      className="flex flex-1 flex-col items-center rounded border p-4 m-1"
+                      onClick={() => { setGeometry(presetGeometries.knot) }}
+                    >
+                      <p>Torus Knot</p>
+                      <KnotIcon strokeWidth={2} size={24} fill={'var(--foreground)'} />
+                    </button>
+                  </div>
+  
+                  <div className="flex flex-1 w-full">
+                    <button
+                      className="flex flex-1 justify-center rounded border p-4 m-1"
+                      onClick={() => {
+                        setVertexCode(presetShaders.v0);
+                        setFragmentCode(presetShaders.f0);
+                        materialRef.current?.dispose();
+                        materialRef.current = initialMaterial();
+                      }}
+                    >
+                      <p>Reset Shaders</p>
+                    </button>
+                    <button
+                      className="flex flex-1 justify-center rounded border p-4 m-1"
+                      onClick={() => {
+                        if (!meshRef.current || !materialRef.current) return;
+  
+                        materialRef.current.dispose();
+                        materialRef.current = freshMaterial();
+                        meshRef.current.material = materialRef.current;
+                      }}
+                    >
+                      <p>Reset Uniforms</p>
+                    </button>
+                  </div>
+  
+                  <div className="flex flex-1 w-full">
+                    <button
+                      className="flex flex-1 justify-center rounded border p-4 m-1"
+                      onClick={() => { setVertexCode(presetShaders.v1); setFragmentCode(presetShaders.f1) }}
+                    >
+                      <p>Example 1 - Twist</p>
+                    </button>
+                    <button
+                      className="flex flex-1 justify-center rounded border p-4 m-1"
+                      onClick={() => { setVertexCode(presetShaders.v2); setFragmentCode(presetShaders.f2) }}
+                    >
+                      <p>Example 2 - Pulse</p>
+                    </button>
+                  </div>
+  
+                  <div className="flex flex-1 w-full">
+                    <button
+                      className="flex flex-1 justify-center rounded border p-4 m-1"
+                      onClick={() => { setVertexCode(presetShaders.v3); setFragmentCode(presetShaders.f3) }}
+                    >
+                      <p>Example 3 - Wave</p>
+                    </button>
+                    <button
+                      className="flex flex-1 justify-center rounded border p-4 m-1"
+                      onClick={() => { setVertexCode(presetShaders.v4); setFragmentCode(presetShaders.f4) }}
+                    >
+                      <p>Example 4 - Jitter</p>
+                    </button>
+                  </div>
                 </div>
               </div>
             }
