@@ -52,13 +52,13 @@ export default function Home() {
   const meshRef = useRef<MeshType>(null);
   const materialRef = useRef<THREE.ShaderMaterial>(null);
   const loopRef = useRef<number>(null);
-  let errorModelRef = useRef<THREE.Group<THREE.Object3DEventMap>>(null);
+  const errorModelRef = useRef<THREE.Group<THREE.Object3DEventMap>>(null);
 
   const [vertexCode, setVertexCode] = useState(presetShaders.v0);
   const [fragmentCode, setFragmentCode] = useState(presetShaders.f0);
   const [geometry, setGeometry] = useState<GeometryType>(presetGeometries.icosahedron);
 
-  const [hasError, setHasError] = useState<Boolean>(false);
+  const [hasError, setHasError] = useState<boolean>(false);
   const [errorHistory, setErrorHistory] = useState<string[]>([]);
 
   const mousePositionRef = useRef(new THREE.Vector2(0, 0));
