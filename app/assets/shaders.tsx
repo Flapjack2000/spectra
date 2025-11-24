@@ -1,5 +1,5 @@
 
-// Plain, just white lighting
+// Plain default shader, just white lighting
 export const v0 = `
 // Welcome to Spectra! Have fun!
 uniform float uTime;
@@ -65,7 +65,7 @@ void main() {
 }`.trim()
 
 
-// Pulsing
+// Pulse
 export const v2 = `
 uniform float uTime;
 varying vec3 vNormal;
@@ -167,7 +167,6 @@ void main() {
   
   // Color variation based on spike pattern
   float mixFactor = vPattern * 0.5 + 0.5;
-  
   vec3 color = mix(color1, color2, mixFactor);
   
   // Add lighting for depth
@@ -182,4 +181,60 @@ void main() {
   color = color * brightness + vec3(1.0, 0.5, 0.7) * rim * 0.3;
   
   gl_FragColor = vec4(color, 1.0);
-}`.trim()
+}`.trim();
+
+// Spikes
+export const v5 = `
+uniform float uTime;
+varying vec3 vNormal;
+varying vec3 vPosition;
+varying float vPattern;
+
+// Random number between 0 and 1
+float random(vec2 seed) {
+    return fract(sin(dot(seed.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+}
+
+void main() {
+  vNormal = normal;
+  vPosition = position;
+  
+  float spikePower = random(position.xy) * sin(uTime * log(2.0 * uTime)) * 10.;
+  
+  // Spike pattern
+  vPattern = sin(position.x * 5.0 + uTime * 2.0) * 
+                sin(position.y * 5.0 + uTime * 2.0) * 
+                sin(position.z * 5.0 + uTime * 2.0) * spikePower;
+  vec3 newPosition = position + normal * vPattern * 0.3;
+  
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+}`.trim();
+
+export const f5 = `
+uniform float uTime;
+varying vec3 vNormal;
+varying vec3 vPosition;
+varying float vPattern;
+
+void main() {
+  // Base colors
+  vec3 color1 = vec3(0.0, 0.0, 0.0);
+  vec3 color2 = vec3(1.0, 0.3, 0.4);
+  
+  // Color variation based on spike pattern
+  float mixFactor = vPattern * 0.5 + 0.5;
+  vec3 color = mix(color1, color2, mixFactor);
+  
+  // Add lighting for depth
+  vec3 lightDir = normalize(vec3(0.5, 0.5, 1.0));
+  float brightness = dot(normalize(vNormal), lightDir) * 0.4 + 0.6;
+  
+  // Add rim lighting effect
+  vec3 viewDir = normalize(vec3(0.0, 0.0, 1.0));
+  float rim = 1.0 - max(dot(viewDir, normalize(vNormal)), 0.0);
+  rim = pow(rim, 3.0);
+  
+  color = color * brightness + vec3(1.0, 0.5, 0.7) * rim * 0.3;
+  
+  gl_FragColor = vec4(color, 1.0);
+}`.trim();

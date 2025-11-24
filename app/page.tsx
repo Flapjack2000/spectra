@@ -40,7 +40,6 @@ export default function Home() {
     'punctuation': /[{}[\];(),.:]/
   };
 
-
   const AUTO_ROTATE = false;
   const LIGHT_COLOR = new THREE.Color(1, 1, 1);
   const LIGHT_INTENSITY = 1.2;
@@ -290,132 +289,135 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<'vertex' | 'fragment' | 'options' | "error log">('vertex');
 
   return (
-    <div className="flex h-screen">
-
-      <div className="w-[50%]">
+    <div className="flex flex-col lg:flex-row h-screen w-screen overflow-hidden">
+      {/* Canvas Section */}
+      <div className="w-full lg:w-1/2 h-1/2 lg:h-full">
         <canvas className="w-full h-full" id="canvas" ref={canvasRef}></canvas>
       </div>
 
-      <div className="w-[50%] flex flex-col items-center justify-center">
-        <div className="h-[80%] w-[75%]">
-          <div className="flex rounded-t [&>*:first-child]:rounded-tl [&>*:last-child]:rounded-tr [&>*:not(:first-child,:last-child)]:border-x border-b w-fit bg-(--editor-background) ">
+      {/* Editor Section */}
+      <div className="w-full lg:w-1/2 h-1/2 lg:h-full flex flex-col p-2 lg:p-6">
+        <div className="flex flex-col h-full max-w-full lg:max-w-4xl mx-auto w-full">
+
+          {/* Tab Navigation */}
+          <div className="flex rounded-t overflow-x-auto scrollbar-hide bg-(--editor-background) border-b">
             <button
               onClick={() => setActiveTab("vertex")}
-              className={`px-8 py-2 hover:bg-(--active) ${activeTab === "vertex" ? "bg-(--active)" : ""}`}
+              className={`px-3 lg:px-8 py-2 whitespace-nowrap hover:bg-(--active) transition-colors ${activeTab === "vertex" ? "bg-(--active)" : ""}`}
             >
-              Vertex Shader
+              Vertex
             </button>
             <button
               onClick={() => setActiveTab("fragment")}
-              className={`px-8 py-2 hover:bg-(--active) ${activeTab === "fragment" ? "bg-(--active)" : ""}`}
+              className={`px-3 lg:px-8 py-2 whitespace-nowrap hover:bg-(--active) transition-colors border-x ${activeTab === "fragment" ? "bg-(--active)" : ""}`}
             >
-              Fragment Shader
+              Fragment
             </button>
             <button
               onClick={() => setActiveTab("options")}
-              className={`rounded-tr px-8 py-2 hover:bg-(--active) ${activeTab === "options" ? "bg-(--active)" : ""}`}
+              className={`px-3 lg:px-8 py-2 whitespace-nowrap hover:bg-(--active) transition-colors ${activeTab === "options" ? "bg-(--active)" : ""}`}
             >
               Options
             </button>
             <button
               onClick={() => setActiveTab("error log")}
-              className={`rounded-tr px-8 py-2 hover:bg-(--active) ${activeTab === "error log" ? "bg-(--active)" : ""}`}
+              className={`px-3 lg:px-8 py-2 whitespace-nowrap hover:bg-(--active) transition-colors border-l ${activeTab === "error log" ? "bg-(--active)" : ""}`}
             >
-              Error Log
+              Errors
             </button>
           </div>
 
-
-          <div className="bg-(--editor-background) h-[80%] p-2 rounded rounded-tl-none overflow-hidden">
-            {activeTab === "vertex" &&
-              <div className="h-full w-full overflow-auto">
+          {/* Content Area */}
+          <div className="bg-(--editor-background) flex-1 rounded-b overflow-hidden flex flex-col min-h-0">
+            {activeTab === "vertex" && (
+              <div className="h-full overflow-auto">
                 <Editor
                   value={vertexCode}
                   onValueChange={setVertexCode}
-                  highlight={code => Prism.highlight(code, Prism.languages.glsl, 'glsl')} padding={16}
-                  className="w-full bg-(--editor-background-secondary) font-mono text-xs leading-relaxed"
+                  highlight={code => Prism.highlight(code, Prism.languages.glsl, 'glsl')}
+                  padding={16}
+                  className="w-full h-full bg-(--editor-background-secondary) font-mono text-xs leading-relaxed"
                   style={{
                     fontFamily: 'monospace',
                     fontSize: '12px',
+                    minHeight: '100%'
                   }}
                 />
               </div>
-            }
+            )}
 
-            {activeTab === "fragment" &&
-              <div className="h-full w-full overflow-auto">
+            {activeTab === "fragment" && (
+              <div className="h-full overflow-auto">
                 <Editor
                   value={fragmentCode}
                   onValueChange={setFragmentCode}
-                  highlight={code => Prism.highlight(code, Prism.languages.glsl, 'glsl')} padding={16}
-                  className="w-full bg-(--editor-background-secondary) font-mono text-xs leading-relaxed"
+                  highlight={code => Prism.highlight(code, Prism.languages.glsl, 'glsl')}
+                  padding={16}
+                  className="w-full h-full bg-(--editor-background-secondary) font-mono text-xs leading-relaxed"
                   style={{
                     fontFamily: 'monospace',
                     fontSize: '12px',
+                    minHeight: '100%'
                   }}
                 />
               </div>
-            }
+            )}
 
-            {activeTab === "options" &&
-              <div className="*:*:duration-200 *:*:hover:bg-(--active) *:*:transition-colors h-fit w-full flex-1 flex-col bg-(--editor-background-secondary) text-foreground border-none p-4 font-mono text-xs">
-                <div className="flex flex-1 w-full">
+            {activeTab === "options" && (
+              <div className="h-full overflow-auto p-2 lg:p-4 bg-(--editor-background-secondary)">
+                <div className="grid grid-cols-2 gap-2 lg:gap-3 max-w-2xl mx-auto">
+                  {/* Geometry buttons */}
                   <button
-                    className="flex flex-1 flex-col items-center rounded border p-4 m-1"
-                    onClick={() => { setGeometry(presetGeometries.sphere) }}
+                    className="flex flex-col items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors"
+                    onClick={() => setGeometry(presetGeometries.sphere)}
                   >
-                    <p>Sphere</p>
                     <SphereIcon strokeWidth={2} size={24} fill={'var(--foreground)'} />
+                    <p className="text-xs lg:text-sm mt-2">Sphere</p>
                   </button>
 
                   <button
-                    className="flex flex-1 flex-col items-center rounded border p-4 m-1"
-                    onClick={() => { setGeometry(presetGeometries.cube) }}
+                    className="flex flex-col items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors"
+                    onClick={() => setGeometry(presetGeometries.cube)}
                   >
-                    <p>Cube</p>
                     <CubeIcon strokeWidth={2} size={24} fill={'var(--foreground)'} />
+                    <p className="text-xs lg:text-sm mt-2">Cube</p>
                   </button>
-                </div>
 
-                <div className="flex flex-1 w-full">
                   <button
-                    className="flex flex-1 flex-col items-center rounded border p-4 m-1"
-                    onClick={() => { setGeometry(presetGeometries.dodecahedron) }}
+                    className="flex flex-col items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors"
+                    onClick={() => setGeometry(presetGeometries.dodecahedron)}
                   >
-                    <p>Dodecahedron</p>
                     <DodecahedronIcon strokeWidth={2} size={24} fill={'var(--foreground)'} />
+                    <p className="text-xs lg:text-sm mt-2">Dodecahedron</p>
                   </button>
 
                   <button
-                    className="flex flex-1 flex-col items-center rounded border p-4 m-1"
-                    onClick={() => { setGeometry(presetGeometries.icosahedron) }}
+                    className="flex flex-col items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors"
+                    onClick={() => setGeometry(presetGeometries.icosahedron)}
                   >
-                    <p>Icosahedron</p>
                     <IcosahedronIcon strokeWidth={2} size={24} fill={'var(--foreground)'} />
+                    <p className="text-xs lg:text-sm mt-2">Icosahedron</p>
                   </button>
-                </div>
 
-                <div className="flex flex-1 w-full">
                   <button
-                    className="flex flex-1 flex-col items-center rounded border p-4 m-1"
-                    onClick={() => { setGeometry(presetGeometries.plane) }}
+                    className="flex flex-col items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors"
+                    onClick={() => setGeometry(presetGeometries.plane)}
                   >
-                    <p>Plane</p>
                     <PlaneIcon strokeWidth={2} size={24} fill={'var(--foreground)'} />
+                    <p className="text-xs lg:text-sm mt-2">Plane</p>
                   </button>
 
                   <button
-                    className="flex flex-1 flex-col items-center rounded border p-4 m-1"
-                    onClick={() => { setGeometry(presetGeometries.knot) }}
+                    className="flex flex-col items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors"
+                    onClick={() => setGeometry(presetGeometries.knot)}
                   >
-                    <p>Torus Knot</p>
                     <KnotIcon strokeWidth={2} size={24} fill={'var(--foreground)'} />
+                    <p className="text-xs lg:text-sm mt-2">Torus Knot</p>
                   </button>
-                </div>
 
-                <div className="flex flex-1 w-full">
+                  {/* Reset buttons */}
                   <button
-                    className="flex flex-1 justify-center rounded border p-4 m-1"
+                    className="flex items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors col-span-2"
                     onClick={() => {
                       setVertexCode(presetShaders.v0);
                       setFragmentCode(presetShaders.f0);
@@ -423,67 +425,74 @@ export default function Home() {
                       materialRef.current = initialMaterial();
                     }}
                   >
-                    <p>Reset Shaders</p>
+                    <p className="text-xs lg:text-sm">Reset Shaders</p>
                   </button>
+
                   <button
-                    className="flex flex-1 justify-center rounded border p-4 m-1"
+                    className="flex items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors col-span-2"
                     onClick={() => {
                       if (!meshRef.current || !materialRef.current) return;
-
                       materialRef.current.dispose();
                       materialRef.current = freshMaterial();
                       meshRef.current.material = materialRef.current;
                     }}
                   >
-                    <p>Reset Uniforms</p>
+                    <p className="text-xs lg:text-sm">Reset Uniforms</p>
                   </button>
-                </div>
 
-                <div className="flex flex-1 w-full">
+                  {/* Example buttons */}
                   <button
-                    className="flex flex-1 justify-center rounded border p-4 m-1"
+                    className="flex items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors"
                     onClick={() => { setVertexCode(presetShaders.v1); setFragmentCode(presetShaders.f1) }}
                   >
-                    <p>Example 1 - Twist</p>
+                    <p className="text-xs lg:text-sm">Example 1 - Twist</p>
                   </button>
+
                   <button
-                    className="flex flex-1 justify-center rounded border p-4 m-1"
+                    className="flex items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors"
                     onClick={() => { setVertexCode(presetShaders.v2); setFragmentCode(presetShaders.f2) }}
                   >
-                    <p>Example 2 - Pulse</p>
+                    <p className="text-xs lg:text-sm">Example 2 - Pulse</p>
                   </button>
-                </div>
 
-                <div className="flex flex-1 w-full">
                   <button
-                    className="flex flex-1 justify-center rounded border p-4 m-1"
+                    className="flex items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors"
                     onClick={() => { setVertexCode(presetShaders.v3); setFragmentCode(presetShaders.f3) }}
                   >
-                    <p>Example 3 - Wave</p>
+                    <p className="text-xs lg:text-sm">Example 3 - Wave</p>
                   </button>
+
                   <button
-                    className="flex flex-1 justify-center rounded border p-4 m-1"
+                    className="flex items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors"
                     onClick={() => { setVertexCode(presetShaders.v4); setFragmentCode(presetShaders.f4) }}
                   >
-                    <p>Example 4 - Jitter</p>
+                    <p className="text-xs lg:text-sm">Example 4 - Jitter</p>
+                  </button>
+
+                  <button
+                    className="flex items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors col-span-2"
+                    onClick={() => { setVertexCode(presetShaders.v5); setFragmentCode(presetShaders.f5) }}
+                  >
+                    <p className="text-xs lg:text-sm">Example 5 - Spikes</p>
                   </button>
                 </div>
               </div>
-            }
+            )}
 
-            {activeTab === "error log" &&
-              <div className="h-fit w-full flex-1 flex-col bg-(--editor-background-secondary) text-foreground border-none font-mono text-xs">
-                {errorHistory.map((log, index) => (
-                  <div key={index} className="text-red-500 border-foreground border-b p-1 flex flex-1 w-full">
-                    {log}
-                  </div>
-                ))}
+            {activeTab === "error log" && (
+              <div className="h-full overflow-auto bg-(--editor-background-secondary) font-mono text-xs">
+                {errorHistory.length === 0 ? (
+                  <div className="p-4 text-gray-500">No errors yet</div>
+                ) : (
+                  errorHistory.map((log, index) => (
+                    <div key={index} className="text-red-500 border-b border-foreground/20 p-3 lg:p-4">
+                      {log}
+                    </div>
+                  ))
+                )}
               </div>
-
-            }
-
+            )}
           </div>
-
         </div>
       </div>
     </div>
