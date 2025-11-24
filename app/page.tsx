@@ -317,7 +317,7 @@ export default function Home() {
               onClick={() => setActiveTab("options")}
               className={`px-3 lg:px-8 py-2 whitespace-nowrap hover:bg-(--active) transition-colors ${activeTab === "options" ? "bg-(--active)" : ""}`}
             >
-              Options
+              Options & Examples
             </button>
             <button
               onClick={() => setActiveTab("error log")}
@@ -330,13 +330,13 @@ export default function Home() {
           {/* Content Area */}
           <div className="bg-(--editor-background) flex-1 rounded-b overflow-hidden flex flex-col min-h-0">
             {activeTab === "vertex" && (
-              <div className="h-full overflow-auto">
+              <div className="h-full overflow-auto overscroll-contain">
                 <Editor
                   value={vertexCode}
                   onValueChange={setVertexCode}
                   highlight={code => Prism.highlight(code, Prism.languages.glsl, 'glsl')}
                   padding={16}
-                  className="w-full h-full bg-(--editor-background-secondary) font-mono text-xs leading-relaxed"
+                  className="w-full bg-(--editor-background-secondary) font-mono text-xs leading-relaxed"
                   style={{
                     fontFamily: 'monospace',
                     fontSize: '12px',
@@ -347,13 +347,13 @@ export default function Home() {
             )}
 
             {activeTab === "fragment" && (
-              <div className="h-full overflow-auto">
+              <div className="h-full overflow-auto overscroll-contain">
                 <Editor
                   value={fragmentCode}
                   onValueChange={setFragmentCode}
                   highlight={code => Prism.highlight(code, Prism.languages.glsl, 'glsl')}
                   padding={16}
-                  className="w-full h-full bg-(--editor-background-secondary) font-mono text-xs leading-relaxed"
+                  className="w-full bg-(--editor-background-secondary) font-mono text-xs leading-relaxed"
                   style={{
                     fontFamily: 'monospace',
                     fontSize: '12px',
@@ -470,10 +470,17 @@ export default function Home() {
                   </button>
 
                   <button
-                    className="flex items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors col-span-2"
+                    className="flex items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors"
                     onClick={() => { setVertexCode(presetShaders.v5); setFragmentCode(presetShaders.f5) }}
                   >
                     <p className="text-xs lg:text-sm">Example 5 - Spikes</p>
+                  </button>
+
+                  <button
+                    className="flex items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors"
+                    onClick={() => { setVertexCode(presetShaders.v6); setFragmentCode(presetShaders.f6) }}
+                  >
+                    <p className="text-xs lg:text-sm">Example 6 - Fresnel </p>
                   </button>
                 </div>
               </div>

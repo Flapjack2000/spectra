@@ -18,10 +18,12 @@ varying vec3 vNormal;
 varying vec3 vPosition;
 
 void main() {
-  // Simple white with basic lighting
+  // Simple lighting
   vec3 lightDir = normalize(vec3(0.0, 0.0, 1.0));
   float brightness = dot(normalize(vNormal), lightDir) * 0.5 + 0.5;
-  
+
+
+  // Try changing the RGB color values
   vec3 color = vec3(1.0, 1.0, 1.0) * brightness;
   gl_FragColor = vec4(color, 1.0);
 }`.trim();
@@ -115,8 +117,9 @@ void main() {
   vNormal = normal;
   vPosition = position;
   
-  // Create wave displacement
   vec3 newPosition = position;
+
+  // Gradually speeds up
   float wave = sin(position.x * 2.0 + uTime * log(uTime)) * 0.3;
   newPosition.z += wave;
   
@@ -165,7 +168,7 @@ void main() {
   vec3 color1 = vec3(0.9, 0.2, 0.4);
   vec3 color2 = vec3(0.4, 0.1, 0.6);
   
-  // Color variation based on spike pattern
+  // Color variation based on pattern
   float mixFactor = vPattern * 0.5 + 0.5;
   vec3 color = mix(color1, color2, mixFactor);
   
@@ -199,7 +202,8 @@ void main() {
   vNormal = normal;
   vPosition = position;
   
-  float spikePower = random(position.xy) * sin(uTime * log(2.0 * uTime)) * 10.;
+  // Try adjusting the strength here
+  float spikePower = 10.0 * random(position.xy) * sin(uTime * log(2.0 * uTime));
   
   // Spike pattern
   vPattern = sin(position.x * 5.0 + uTime * 2.0) * 
@@ -238,3 +242,38 @@ void main() {
   
   gl_FragColor = vec4(color, 1.0);
 }`.trim();
+
+// Fresnel
+export const v6 = `
+uniform float uTime;
+varying vec3 vNormal;
+varying vec3 vViewPosition;
+
+void main() {
+    vNormal = normalize(normalMatrix * normal);
+    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+    vViewPosition = -mvPosition.xyz;
+    gl_Position = projectionMatrix * mvPosition;
+}`.trim();
+
+export const f6 = `
+uniform float uTime;
+varying vec3 vNormal;
+varying vec3 vViewPosition;
+
+void main() {
+    vec3 viewDir = normalize(vViewPosition);
+    
+    float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 3.0);
+
+    // Try this instead to invert the effect
+    // float fresnel = pow(abs(dot(vNormal, viewDir)), 3.0); 
+
+    vec3 innerColor = vec3(0.1, 0.1, 0.2);
+    vec3 rimColor = vec3(0.3, 0.8, 1.0);
+    
+    vec3 color = mix(innerColor, rimColor, fresnel);
+    color += rimColor * fresnel;        
+
+    gl_FragColor = vec4(color, 1.0);
+}`.trim()
