@@ -276,4 +276,4 @@ void main() {
     color += rimColor * fresnel;        
 
     gl_FragColor = vec4(color, 1.0);
-}`.trim()
+}`.trim();

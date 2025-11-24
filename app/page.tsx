@@ -61,6 +61,10 @@ export default function Home() {
   const [hasError, setHasError] = useState<Boolean>(false);
   const [errorHistory, setErrorHistory] = useState<string[]>([]);
 
+  const mousePositionRef = useRef(new THREE.Vector2(0, 0));
+  const lastMousePositionRef = useRef(new THREE.Vector2(0, 0));
+  const mouseSpeedRef = useRef(0);
+
   const initialMaterial = () => {
     return new THREE.ShaderMaterial({
       wireframe: false,
@@ -70,6 +74,8 @@ export default function Home() {
         THREE.UniformsLib['lights'], // Built in lighting uniforms
         {
           uTime: { value: 0 },
+          uMousePosition: { value: new THREE.Vector2(0, 0) },
+          uMouseSpeed: { value: 0 }
         }
       ]),
       vertexShader: presetShaders.v0,
@@ -86,6 +92,8 @@ export default function Home() {
         THREE.UniformsLib['lights'], // Built in lighting uniforms
         {
           uTime: { value: 0 },
+          uMousePosition: { value: new THREE.Vector2(0, 0) },
+          uMouseSpeed: { value: 0 }
         }
       ]),
       vertexShader: vertexCode,
@@ -160,12 +168,43 @@ export default function Home() {
     handleResize();
     window.addEventListener("resize", handleResize);
 
+    // Handle mouse movement
+    const canvas = canvasRef.current;
+    const handleMouseMove = (event: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      // Normalize mouse position to -1 to 1 range
+      const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      const y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      lastMousePositionRef.current.copy(mousePositionRef.current);
+      mousePositionRef.current.set(x, y);
+
+      // Calculate speed
+      const dx = mousePositionRef.current.x - lastMousePositionRef.current.x;
+      const dy = mousePositionRef.current.y - lastMousePositionRef.current.y;
+      mouseSpeedRef.current = Math.sqrt(dx * dx + dy * dy);
+    };
+
+    canvas.addEventListener("mousemove", handleMouseMove);
+
     // Main loop
     const loop = () => {
       loopRef.current = requestAnimationFrame(loop);
 
       if (materialRef.current && materialRef.current.uniforms.uTime) {
         materialRef.current.uniforms.uTime.value += 0.01;
+      }
+
+      // Update mouse uniforms
+      if (materialRef.current) {
+        if (materialRef.current.uniforms.uMousePosition) {
+          materialRef.current.uniforms.uMousePosition.value.copy(mousePositionRef.current);
+        }
+        if (materialRef.current.uniforms.uMouseSpeed) {
+          materialRef.current.uniforms.uMouseSpeed.value = mouseSpeedRef.current;
+          // Decay speed over time
+          mouseSpeedRef.current *= 0.95;
+        }
       }
 
       // Auto rotation (around z axis)
@@ -183,6 +222,7 @@ export default function Home() {
     return () => {
       // Dispose of everything
       window.removeEventListener("resize", handleResize);
+      canvas.removeEventListener("mousemove", handleMouseMove);
       if (loopRef.current) {
         cancelAnimationFrame(loopRef.current)
       };
@@ -211,7 +251,9 @@ export default function Home() {
           uniforms: THREE.UniformsUtils.merge([
             THREE.UniformsLib['lights'], // Built in lighting uniforms
             {
-              uTime: { value: materialRef.current?.uniforms.uTime.value || 0 }
+              uTime: { value: materialRef.current?.uniforms.uTime.value || 0 },
+              uMousePosition: { value: new THREE.Vector2(0, 0) },
+              uMouseSpeed: { value: 0 }
             }]),
           vertexShader: vertexCode,
           fragmentShader: fragmentCode
