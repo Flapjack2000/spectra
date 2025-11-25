@@ -40,10 +40,12 @@ export default function Home() {
     'punctuation': /[{}[\];(),.:]/
   };
 
-  const AUTO_ROTATE = false;
   const LIGHT_COLOR = new THREE.Color(1, 1, 1);
   const LIGHT_INTENSITY = 1.2;
   const CODE_UPDATE_TIMEOUT = 500;
+
+  const [autoRotate, setAutoRotate] = useState(false);
+  const [wireframe, setWireframe] = useState(false);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -53,6 +55,7 @@ export default function Home() {
   const materialRef = useRef<THREE.ShaderMaterial>(null);
   const loopRef = useRef<number>(null);
   const errorModelRef = useRef<THREE.Group<THREE.Object3DEventMap>>(null);
+  const autoRotateRef = useRef(autoRotate);
 
   const [vertexCode, setVertexCode] = useState(presetShaders.v0);
   const [fragmentCode, setFragmentCode] = useState(presetShaders.f0);
@@ -67,7 +70,7 @@ export default function Home() {
 
   const initialMaterial = () => {
     return new THREE.ShaderMaterial({
-      wireframe: false,
+      wireframe: wireframe,
       side: THREE.DoubleSide,
       lights: true,
       uniforms: THREE.UniformsUtils.merge([
@@ -85,7 +88,7 @@ export default function Home() {
 
   const freshMaterial = () => {
     return new THREE.ShaderMaterial({
-      wireframe: false,
+      wireframe: wireframe,
       side: THREE.DoubleSide,
       lights: true,
       uniforms: THREE.UniformsUtils.merge([
@@ -208,7 +211,7 @@ export default function Home() {
       }
 
       // Auto rotation (around z axis)
-      if (meshRef.current && AUTO_ROTATE) {
+      if (meshRef.current && autoRotateRef.current) {
         meshRef.current.rotation.z += 0.01;
       }
 
@@ -245,7 +248,7 @@ export default function Home() {
       // Test out shader compilation so see if they work
       try {
         const testMaterial = new THREE.ShaderMaterial({
-          wireframe: false,
+          wireframe: wireframe,
           side: THREE.DoubleSide,
           lights: true,
           uniforms: THREE.UniformsUtils.merge([
@@ -316,8 +319,7 @@ export default function Home() {
 
     }, CODE_UPDATE_TIMEOUT);
     return () => clearTimeout(updateTimeout);
-  }, [vertexCode, fragmentCode, geometry, hasError])
-
+  }, [vertexCode, fragmentCode, geometry, hasError, wireframe])
 
   // Update geometry change
   useEffect(() => {
@@ -327,6 +329,17 @@ export default function Home() {
     meshRef.current.geometry = geometry;
     oldGeometry.dispose();
   }, [geometry]);
+
+  // Update wireframe when toggled
+  useEffect(() => {
+    if (!materialRef.current) return;
+    materialRef.current.wireframe = wireframe;
+  }, [wireframe]);
+
+  // Update autoRotate ref when state changes
+  useEffect(() => {
+    autoRotateRef.current = autoRotate;
+  }, [autoRotate]);
 
   const [activeTab, setActiveTab] = useState<'vertex' | 'fragment' | 'options' | "error log">('vertex');
 
@@ -455,6 +468,21 @@ export default function Home() {
                   >
                     <KnotIcon strokeWidth={2} size={24} fill={'var(--foreground)'} />
                     <p className="text-xs lg:text-sm mt-2">Torus Knot</p>
+                  </button>
+
+                  {/* Control buttons */}
+                  <button
+                    className={`flex items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors ${autoRotate ? 'bg-(--active)' : ''}`}
+                    onClick={() => setAutoRotate(!autoRotate)}
+                  >
+                    <p className="text-xs lg:text-sm">{autoRotate ? 'Stop' : 'Start'} Auto Rotate</p>
+                  </button>
+
+                  <button
+                    className={`flex items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors ${wireframe ? 'bg-(--active)' : ''}`}
+                    onClick={() => setWireframe(!wireframe)}
+                  >
+                    <p className="text-xs lg:text-sm">Wireframe: {wireframe ? 'On' : 'Off'}</p>
                   </button>
 
                   {/* Reset buttons */}
