@@ -360,13 +360,13 @@ export default function Home() {
               onClick={() => setActiveTab("vertex")}
               className={`px-3 lg:px-8 py-2 whitespace-nowrap hover:bg-(--active) transition-colors ${activeTab === "vertex" ? "bg-(--active)" : ""}`}
             >
-              Vertex
+              Vertex Shader
             </button>
             <button
               onClick={() => setActiveTab("fragment")}
               className={`px-3 lg:px-8 py-2 whitespace-nowrap hover:bg-(--active) transition-colors border-x ${activeTab === "fragment" ? "bg-(--active)" : ""}`}
             >
-              Fragment
+              Fragment Shader
             </button>
             <button
               onClick={() => setActiveTab("options")}
@@ -378,7 +378,7 @@ export default function Home() {
               onClick={() => setActiveTab("error log")}
               className={`px-3 lg:px-8 py-2 whitespace-nowrap hover:bg-(--active) transition-colors border-l ${activeTab === "error log" ? "bg-(--active)" : ""}`}
             >
-              Errors
+              Error Log
             </button>
           </div>
 
@@ -391,12 +391,7 @@ export default function Home() {
                   onValueChange={setVertexCode}
                   highlight={code => Prism.highlight(code, Prism.languages.glsl, 'glsl')}
                   padding={16}
-                  className="w-full bg-(--editor-background-secondary) font-mono text-xs leading-relaxed"
-                  style={{
-                    fontFamily: 'monospace',
-                    fontSize: '12px',
-                    minHeight: '100%'
-                  }}
+                  className="min-h-full w-full bg-(--editor-background-secondary) font-mono text-xs leading-relaxed"
                 />
               </div>
             )}
@@ -408,12 +403,7 @@ export default function Home() {
                   onValueChange={setFragmentCode}
                   highlight={code => Prism.highlight(code, Prism.languages.glsl, 'glsl')}
                   padding={16}
-                  className="w-full bg-(--editor-background-secondary) font-mono text-xs leading-relaxed"
-                  style={{
-                    fontFamily: 'monospace',
-                    fontSize: '12px',
-                    minHeight: '100%'
-                  }}
+                  className="min-h-full w-full bg-(--editor-background-secondary) font-mono text-xs leading-relaxed"
                 />
               </div>
             )}
