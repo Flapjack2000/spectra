@@ -312,7 +312,7 @@ export default function Home() {
 
   const [activeTab, setActiveTab] = useState<'vertex' | 'fragment' | 'options' | "error log">('vertex');
 
-  const UniformQuickAdd = () => {
+  const UniformQuickAddRemove = () => {
     // DON"T FORGET GLSL TYPES FOR THE UNIFORMS
     const uniforms: string[] = ['float uTime', 'vec2 uMousePosition', 'float uMouseSpeed']
     return (
@@ -324,12 +324,15 @@ export default function Home() {
               <button
                 onClick={() => {
                   const definition = "uniform " + uniform;
-                  if (!vertexCode.includes(definition)) { setVertexCode(definition + ';\n' + vertexCode) }
-                  if (!fragmentCode.includes(definition)) { setFragmentCode(definition + ';\n' + fragmentCode) }
+                  const fullDefinition = definition + ';\n';
+                  if (!vertexCode.includes(definition)) { setVertexCode(fullDefinition + vertexCode) }
+                  else { setVertexCode(vertexCode.replace(fullDefinition, "")) }
+                  if (!fragmentCode.includes(definition)) { setFragmentCode(fullDefinition + fragmentCode) }
+                  else { setFragmentCode(fragmentCode.replace(fullDefinition, "")) }
                 }
                 }
                 key={index}
-                className="cursor-pointer border-transparent bg-(--active) text-secondary-foreground inline-flex items-center justify-center rounded-full border px-2 py-0.5 text-xs w-fit whitespace-nowrap shrink-0 gap-1 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] overflow-hidden">
+                className="cursor-pointer border-transparent bg-(--active)  text-secondary-foreground inline-flex items-center justify-center rounded-full border px-2 py-0.5 text-xs w-fit whitespace-nowrap shrink-0 gap-1 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] overflow-hidden">
                 <span className="font-bold italic">{uniform.split(' ')[0]}</span>{uniform.split(' ')[1]}
               </button>
             )
@@ -393,7 +396,7 @@ export default function Home() {
           <div className="bg-(--editor-background) flex-1 rounded-b overflow-hidden flex flex-col min-h-0">
             {activeTab === "vertex" && (
               <div className="h-full flex flex-col">
-                <UniformQuickAdd />
+                <UniformQuickAddRemove />
                 <div className="flex-1 overflow-auto overscroll-contain">
                   <Editor
                     value={vertexCode}
@@ -408,7 +411,7 @@ export default function Home() {
 
             {activeTab === "fragment" && (
               <div className="h-full flex flex-col">
-                <UniformQuickAdd />
+                <UniformQuickAddRemove />
                 <div className="flex-1 overflow-auto overscroll-contain">
                   <Editor
                     value={fragmentCode}
