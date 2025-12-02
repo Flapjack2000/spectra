@@ -2,7 +2,6 @@
 // Plain default shader, just white lighting
 export const v0 = `
 // Welcome to Spectra! Have fun!
-uniform float uTime;
 varying vec3 vNormal;
 varying vec3 vPosition;
 
@@ -52,6 +51,7 @@ void main() {
 }`.trim();
 
 export const f1 = `
+uniform float uTime;
 varying vec3 vNormal;
 varying vec3 vPosition;
 
@@ -127,6 +127,7 @@ void main() {
 }`.trim();
 
 export const f3 = `
+uniform float uTime;
 varying vec3 vNormal;
 varying vec3 vPosition;
 
