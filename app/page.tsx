@@ -317,8 +317,8 @@ export default function Home() {
     const uniforms: string[] = ['float uTime', 'vec2 uMousePosition', 'float uMouseSpeed']
     return (
       <div className="flex items-baseline px-4 py-2 bg-(--editor-background) border-t text-xs opacity-75">
-        <span className="shrink-0 mr-2">Add uniforms:</span>
-        <div className="flex justify-start overflow-x-auto scrollbar-hide gap-0.5">
+        <span className="shrink-0 mr-2">Add / Remove Uniforms:</span>
+        <div className="flex justify-start overflow-x-auto p-1 pl-3 gap-1">
           {uniforms.map(
             (uniform, index) => (
               <button
@@ -329,10 +329,9 @@ export default function Home() {
                   else { setVertexCode(vertexCode.replace(fullDefinition, "")) }
                   if (!fragmentCode.includes(definition)) { setFragmentCode(fullDefinition + fragmentCode) }
                   else { setFragmentCode(fragmentCode.replace(fullDefinition, "")) }
-                }
-                }
+                }}
                 key={index}
-                className="cursor-pointer border-transparent bg-(--active)  text-secondary-foreground inline-flex items-center justify-center rounded-full border px-2 py-0.5 text-xs w-fit whitespace-nowrap shrink-0 gap-1 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] overflow-hidden">
+                className="cursor-pointer border-transparent bg-(--active) inline-flex items-center justify-center rounded-full border px-2 py-0.5 w-fit whitespace-nowrap shrink-0 gap-1 overflow-hidden">
                 <span className="font-bold italic">{uniform.split(' ')[0]}</span>{uniform.split(' ')[1]}
               </button>
             )
@@ -347,7 +346,7 @@ export default function Home() {
       <a
         href="https://buymeacoffee.com/zachwilliams"
         target="_blank"
-        className="cursor-alias border-transparent bg-(--coffee-btn) text-(--editor-background) inline-flex items-center justify-center rounded-full border px-2 py-0.5 w-fit whitespace-nowrap shrink-0 gap-1 overflow-hidden">
+        className="cursor-pointer border-transparent bg-(--coffee-btn) text-(--editor-background) inline-flex items-center justify-center rounded-full border px-2 py-0.5 w-fit whitespace-nowrap shrink-0 gap-1 overflow-hidden">
         <span>{"☕ Buy me a coffee :)"}</span>
       </a>
     )
