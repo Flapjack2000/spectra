@@ -68,7 +68,7 @@ export default function Home() {
   const lastMousePositionRef = useRef(new THREE.Vector2(0, 0));
   const mouseSpeedRef = useRef(0);
 
-  const initialMaterial = () => {
+  const createMaterial = (vertex: string, fragment: string, time: number = 0) => {
     return new THREE.ShaderMaterial({
       wireframe: wireframe,
       side: THREE.DoubleSide,
@@ -76,31 +76,13 @@ export default function Home() {
       uniforms: THREE.UniformsUtils.merge([
         THREE.UniformsLib['lights'], // Built in lighting uniforms
         {
-          uTime: { value: 0 },
+          uTime: { value: time },
           uMousePosition: { value: new THREE.Vector2(0, 0) },
           uMouseSpeed: { value: 0 }
         }
       ]),
-      vertexShader: presetShaders.v0,
-      fragmentShader: presetShaders.f0
-    });
-  }
-
-  const freshMaterial = () => {
-    return new THREE.ShaderMaterial({
-      wireframe: wireframe,
-      side: THREE.DoubleSide,
-      lights: true,
-      uniforms: THREE.UniformsUtils.merge([
-        THREE.UniformsLib['lights'], // Built in lighting uniforms
-        {
-          uTime: { value: 0 },
-          uMousePosition: { value: new THREE.Vector2(0, 0) },
-          uMouseSpeed: { value: 0 }
-        }
-      ]),
-      vertexShader: vertexCode,
-      fragmentShader: fragmentCode
+      vertexShader: vertex,
+      fragmentShader: fragment
     });
   }
 
@@ -143,7 +125,7 @@ export default function Home() {
     orbitControls.update();
 
     // Initial material
-    const material = initialMaterial();
+    const material = createMaterial(presetShaders.v0, presetShaders.f0);
     materialRef.current = material;
 
     // Create mesh from initial geometry and material
@@ -247,20 +229,7 @@ export default function Home() {
 
       // Test out shader compilation so see if they work
       try {
-        const testMaterial = new THREE.ShaderMaterial({
-          wireframe: wireframe,
-          side: THREE.DoubleSide,
-          lights: true,
-          uniforms: THREE.UniformsUtils.merge([
-            THREE.UniformsLib['lights'], // Built in lighting uniforms
-            {
-              uTime: { value: materialRef.current?.uniforms.uTime.value || 0 },
-              uMousePosition: { value: new THREE.Vector2(0, 0) },
-              uMouseSpeed: { value: 0 }
-            }]),
-          vertexShader: vertexCode,
-          fragmentShader: fragmentCode
-        })
+        const testMaterial = createMaterial(vertexCode, fragmentCode, materialRef.current?.uniforms.uTime.value || 0);
 
         // Create hidden test scene
         const testScene = new THREE.Scene();
@@ -343,6 +312,44 @@ export default function Home() {
 
   const [activeTab, setActiveTab] = useState<'vertex' | 'fragment' | 'options' | "error log">('vertex');
 
+  const UniformQuickAdd = () => {
+    // DON"T FORGET GLSL TYPES FOR THE UNIFORMS
+    const uniforms: string[] = ['float uTime', 'vec2 uMousePosition', 'float uMouseSpeed']
+    return (
+      <div className="flex items-baseline px-4 py-2 bg-(--editor-background) border-t text-xs opacity-75">
+        <span className="shrink-0 mr-2">Add uniforms:</span>
+        <div className="flex justify-start overflow-x-auto scrollbar-hide gap-0.5">
+          {uniforms.map(
+            (uniform, index) => (
+              <button
+                onClick={() => {
+                  const definition = "uniform " + uniform;
+                  if (!vertexCode.includes(definition)) { setVertexCode(definition + ';\n' + vertexCode) }
+                  if (!fragmentCode.includes(definition)) { setFragmentCode(definition + ';\n' + fragmentCode) }
+                }
+                }
+                key={index}
+                className="cursor-pointer border-transparent bg-(--active) text-secondary-foreground inline-flex items-center justify-center rounded-full border px-2 py-0.5 text-xs w-fit whitespace-nowrap shrink-0 gap-1 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] overflow-hidden">
+                <span className="font-bold italic">{uniform.split(' ')[0]}</span>{uniform.split(' ')[1]}
+              </button>
+            )
+          )}
+          <BuyMeCoffee />
+        </div>
+      </div>)
+  }
+
+  const BuyMeCoffee = () => {
+    return (
+      <a
+        href="https://buymeacoffee.com/zachwilliams"
+        target="_blank"
+        className="cursor-alias border-transparent bg-(--active) text-secondary-foreground inline-flex items-center justify-center rounded-full border px-2 py-0.5 text-xs w-fit whitespace-nowrap shrink-0 gap-1 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] overflow-hidden">
+        <span>{"☕ Buy me a coffee :)"}</span>
+      </a>
+    )
+  }
+
   return (
     <div className="flex flex-col lg:flex-row h-screen w-screen overflow-hidden">
       {/* Canvas Section */}
@@ -385,26 +392,32 @@ export default function Home() {
           {/* Content Area */}
           <div className="bg-(--editor-background) flex-1 rounded-b overflow-hidden flex flex-col min-h-0">
             {activeTab === "vertex" && (
-              <div className="h-full overflow-auto overscroll-contain">
-                <Editor
-                  value={vertexCode}
-                  onValueChange={setVertexCode}
-                  highlight={code => Prism.highlight(code, Prism.languages.glsl, 'glsl')}
-                  padding={16}
-                  className="min-h-full w-full bg-(--editor-background-secondary) font-mono text-xs leading-relaxed"
-                />
+              <div className="h-full flex flex-col">
+                <UniformQuickAdd />
+                <div className="flex-1 overflow-auto overscroll-contain">
+                  <Editor
+                    value={vertexCode}
+                    onValueChange={setVertexCode}
+                    highlight={code => Prism.highlight(code, Prism.languages.glsl, 'glsl')}
+                    padding={16}
+                    className="min-h-full w-full bg-(--editor-background-secondary) font-mono text-xs leading-relaxed"
+                  />
+                </div>
               </div>
             )}
 
             {activeTab === "fragment" && (
-              <div className="h-full overflow-auto overscroll-contain">
-                <Editor
-                  value={fragmentCode}
-                  onValueChange={setFragmentCode}
-                  highlight={code => Prism.highlight(code, Prism.languages.glsl, 'glsl')}
-                  padding={16}
-                  className="min-h-full w-full bg-(--editor-background-secondary) font-mono text-xs leading-relaxed"
-                />
+              <div className="h-full flex flex-col">
+                <UniformQuickAdd />
+                <div className="flex-1 overflow-auto overscroll-contain">
+                  <Editor
+                    value={fragmentCode}
+                    onValueChange={setFragmentCode}
+                    highlight={code => Prism.highlight(code, Prism.languages.glsl, 'glsl')}
+                    padding={16}
+                    className="min-h-full w-full bg-(--editor-background-secondary) font-mono text-xs leading-relaxed"
+                  />
+                </div>
               </div>
             )}
 
@@ -482,7 +495,7 @@ export default function Home() {
                       setVertexCode(presetShaders.v0);
                       setFragmentCode(presetShaders.f0);
                       materialRef.current?.dispose();
-                      materialRef.current = initialMaterial();
+                      materialRef.current = createMaterial(presetShaders.v0, presetShaders.f0);
                     }}
                   >
                     <p className="text-xs lg:text-sm">Reset Shaders</p>
@@ -493,7 +506,7 @@ export default function Home() {
                     onClick={() => {
                       if (!meshRef.current || !materialRef.current) return;
                       materialRef.current.dispose();
-                      materialRef.current = freshMaterial();
+                      materialRef.current = createMaterial(vertexCode, fragmentCode);
                       meshRef.current.material = materialRef.current;
                     }}
                   >
