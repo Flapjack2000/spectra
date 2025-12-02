@@ -344,7 +344,7 @@ export default function Home() {
       <a
         href="https://buymeacoffee.com/zachwilliams"
         target="_blank"
-        className="cursor-alias border-transparent bg-(--coffee-btn) text-secondary-foreground inline-flex items-center justify-center rounded-full border px-2 py-0.5 text-xs w-fit whitespace-nowrap shrink-0 gap-1 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] overflow-hidden">
+        className="cursor-alias border-transparent bg-(--coffee-btn) text-(--editor-background) inline-flex items-center justify-center rounded-full border px-2 py-0.5 w-fit whitespace-nowrap shrink-0 gap-1 overflow-hidden">
         <span>{"☕ Buy me a coffee :)"}</span>
       </a>
     )
