@@ -196,7 +196,7 @@ varying float vPattern;
 
 // Random number between 0 and 1
 float random(vec2 seed) {
-    return fract(sin(dot(seed.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+    return fract(sin(dot(seed, vec2(12.9898, 78.233))) * 43758.5453123);
 }
 
 void main() {
@@ -246,7 +246,6 @@ void main() {
 
 // Fresnel
 export const v6 = `
-uniform float uTime;
 varying vec3 vNormal;
 varying vec3 vViewPosition;
 
@@ -258,7 +257,6 @@ void main() {
 }`.trim();
 
 export const f6 = `
-uniform float uTime;
 varying vec3 vNormal;
 varying vec3 vViewPosition;
 

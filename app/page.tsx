@@ -332,6 +332,8 @@ export default function Home() {
                 }}
                 key={index}
                 className="cursor-pointer border-transparent bg-(--active) inline-flex items-center justify-center rounded-full border px-2 py-0.5 w-fit whitespace-nowrap shrink-0 gap-1 overflow-hidden">
+
+                {/* "float uTime", for example */}
                 <span className="font-bold italic">{uniform.split(' ')[0]}</span>{uniform.split(' ')[1]}
               </button>
             )
