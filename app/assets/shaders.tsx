@@ -197,7 +197,7 @@ varying float vPattern;
 
 // Random number between 0 and 1
 float random(vec2 seed) {
-    return fract(sin(dot(seed + mod(30.0, uTime), vec2(12.9898, 78.233))) * 43758.5453123);
+    return fract(sin(dot(seed + mod(30.0, uTime + 30.0), vec2(12.9898, 78.233))) * 43758.5453123);
 }
 
 void main() {
