@@ -189,6 +189,7 @@ void main() {
 
 // Spikes
 export const v5 = `
+uniform vec2 uMousePosition;
 uniform float uTime;
 varying vec3 vNormal;
 varying vec3 vPosition;
@@ -196,7 +197,7 @@ varying float vPattern;
 
 // Random number between 0 and 1
 float random(vec2 seed) {
-    return fract(sin(dot(seed, vec2(12.9898, 78.233))) * 43758.5453123);
+    return fract(sin(dot(seed + mod(30.0, uTime), vec2(12.9898, 78.233))) * 43758.5453123);
 }
 
 void main() {
@@ -204,7 +205,7 @@ void main() {
   vPosition = position;
   
   // Try adjusting the strength here
-  float spikePower = 10.0 * random(position.xy) * sin(uTime * log(2.0 * uTime));
+  float spikePower = uMousePosition.x * 10.0 * random(position.xy) * sin(uTime * log(2.0 * uTime));
   
   // Spike pattern
   vPattern = sin(position.x * 5.0 + uTime * 2.0) * 
