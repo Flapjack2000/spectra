@@ -227,6 +227,21 @@ export default function Home() {
       const renderer = rendererRef.current;
       if (!renderer) return;
 
+      // Capture console errors to get detailed shader compilation messages
+      let capturedError = '';
+      const originalError = console.error;
+      const originalWarn = console.warn;
+
+      console.error = (...args) => {
+        capturedError += args.join(' ') + '\n';
+        // Don't call originalError to prevent double logging
+      };
+
+      console.warn = (...args) => {
+        capturedError += args.join(' ') + '\n';
+        // Don't call originalWarn to prevent double logging
+      };
+
       // Test out shader compilation so see if they work
       try {
         const testMaterial = createMaterial(vertexCode, fragmentCode, materialRef.current?.uniforms.uTime.value || 0);
@@ -238,24 +253,25 @@ export default function Home() {
         const testMesh = new THREE.Mesh(testGeometry, testMaterial);
         testScene.add(testMesh);
 
-        // Force renderer to compile the shader
+        // Force renderer to compile the shader and check for compilation errors
         const oldTarget = renderer.getRenderTarget();
-        const testTarget = new THREE.WebGLRenderTarget();
+        const testTarget = new THREE.WebGLRenderTarget(1, 1);
         renderer.setRenderTarget(testTarget);
         renderer.render(testScene, testCamera);
         renderer.setRenderTarget(oldTarget);
-
-        // Check for errors
-        const gl = renderer.getContext();
-        const glError = gl.getError();
 
         // Clean up test objects
         testTarget.dispose();
         testGeometry.dispose();
 
-        // Report error and escape to catch block
-        if (glError !== gl.NO_ERROR) {
-          throw new Error("WebGL Error: " + glError);
+        // Restore console methods
+        console.error = originalError;
+        console.warn = originalWarn;
+
+        // If we captured any errors during compilation, throw them
+        if (capturedError) {
+          testMaterial.dispose();
+          throw new Error(capturedError);
         }
 
         if (!materialRef.current || !meshRef.current || !sceneRef.current) return
@@ -274,10 +290,24 @@ export default function Home() {
       }
 
       catch (e: unknown) {
-        // Log error
-        console.error("Shader error:", e);
+        // Restore console methods in case of error
+        console.error = originalError;
+        console.warn = originalWarn;
+
+        // Use captured error if available, otherwise use the basic error message
         const errorMessage = e instanceof Error ? e.message : String(e);
-        setErrorHistory([...errorHistory, "Shader error: " + errorMessage])
+        const detailedError = capturedError || errorMessage;
+
+        // Only update error history if it's a new error
+        setErrorHistory(prev => {
+          const trimmedError = detailedError.trim();
+          // Don't add duplicate consecutive errors
+          if (prev.length > 0 && prev[prev.length - 1] === trimmedError) {
+            return prev;
+          }
+          return [...prev, trimmedError];
+        });
+
         if (!meshRef.current || !sceneRef.current || !errorModelRef.current) return;
 
         // Hide the main mesh and show error model
@@ -288,7 +318,7 @@ export default function Home() {
 
     }, CODE_UPDATE_TIMEOUT);
     return () => clearTimeout(updateTimeout);
-  }, [vertexCode, fragmentCode, geometry, hasError, wireframe])
+  }, [vertexCode, fragmentCode, geometry, wireframe])
 
   // Update geometry change
   useEffect(() => {
