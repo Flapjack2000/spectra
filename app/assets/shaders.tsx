@@ -189,7 +189,6 @@ void main() {
 
 // Spikes
 export const v5 = `
-uniform vec2 uMousePosition;
 uniform float uTime;
 varying vec3 vNormal;
 varying vec3 vPosition;
@@ -205,7 +204,7 @@ void main() {
   vPosition = position;
   
   // Try adjusting the strength here
-  float spikePower = uMousePosition.x * 10.0 * random(position.xy) * sin(uTime * log(2.0 * uTime));
+  float spikePower = 10.0 * random(position.xy) * sin(uTime * log(2.0 * uTime));
   
   // Spike pattern
   vPattern = sin(position.x * 5.0 + uTime * 2.0) * 
