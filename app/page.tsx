@@ -413,7 +413,7 @@ export default function Home() {
               onClick={() => setActiveTab("options")}
               className={`px-3 lg:px-8 py-2 whitespace-nowrap hover:bg-(--active) transition-colors ${activeTab === "options" ? "bg-(--active)" : ""}`}
             >
-              Options & Examples
+              Geometry & Demos
             </button>
             <button
               onClick={() => setActiveTab("error log")}
@@ -458,6 +458,47 @@ export default function Home() {
             {activeTab === "options" && (
               <div className="h-full overflow-auto p-2 lg:p-4 bg-(--editor-background-secondary)">
                 <div className="grid grid-cols-2 gap-2 lg:gap-3 max-w-2xl mx-auto">
+
+                  {/* Control buttons */}
+                  <button
+                    className={`flex items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors col-span-2 ${autoRotate ? 'bg-(--active)' : ''}`}
+                    onClick={() => setAutoRotate(!autoRotate)}
+                  >
+                    <p className="text-xs lg:text-sm">Auto Rotate: {autoRotate ? "On" : "Off"}</p>
+                  </button>
+
+                  <button
+                    className={`flex items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors col-span-2 ${wireframe ? 'bg-(--active)' : ''}`}
+                    onClick={() => setWireframe(!wireframe)}
+                  >
+                    <p className="text-xs lg:text-sm">Wireframe: {wireframe ? 'On' : 'Off'}</p>
+                  </button>
+
+                  {/* Reset buttons */}
+                  <button
+                    className="flex items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors col-span-2"
+                    onClick={() => {
+                      setVertexCode(presetShaders.v0);
+                      setFragmentCode(presetShaders.f0);
+                      materialRef.current?.dispose();
+                      materialRef.current = createMaterial(presetShaders.v0, presetShaders.f0);
+                    }}
+                  >
+                    <p className="text-xs lg:text-sm">Reset Shaders</p>
+                  </button>
+
+                  <button
+                    className="flex items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors col-span-2"
+                    onClick={() => {
+                      if (!meshRef.current || !materialRef.current) return;
+                      materialRef.current.dispose();
+                      materialRef.current = createMaterial(vertexCode, fragmentCode);
+                      meshRef.current.material = materialRef.current;
+                    }}
+                  >
+                    <p className="text-xs lg:text-sm">Reset Uniforms</p>
+                  </button>
+
                   {/* Geometry buttons */}
                   <button
                     className="flex flex-col items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors"
@@ -507,45 +548,6 @@ export default function Home() {
                     <p className="text-xs lg:text-sm mt-2">Torus Knot</p>
                   </button>
 
-                  {/* Control buttons */}
-                  <button
-                    className={`flex items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors ${autoRotate ? 'bg-(--active)' : ''}`}
-                    onClick={() => setAutoRotate(!autoRotate)}
-                  >
-                    <p className="text-xs lg:text-sm">{autoRotate ? 'Stop' : 'Start'} Auto Rotate</p>
-                  </button>
-
-                  <button
-                    className={`flex items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors ${wireframe ? 'bg-(--active)' : ''}`}
-                    onClick={() => setWireframe(!wireframe)}
-                  >
-                    <p className="text-xs lg:text-sm">Wireframe: {wireframe ? 'On' : 'Off'}</p>
-                  </button>
-
-                  {/* Reset buttons */}
-                  <button
-                    className="flex items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors col-span-2"
-                    onClick={() => {
-                      setVertexCode(presetShaders.v0);
-                      setFragmentCode(presetShaders.f0);
-                      materialRef.current?.dispose();
-                      materialRef.current = createMaterial(presetShaders.v0, presetShaders.f0);
-                    }}
-                  >
-                    <p className="text-xs lg:text-sm">Reset Shaders</p>
-                  </button>
-
-                  <button
-                    className="flex items-center justify-center rounded border p-3 lg:p-4 hover:bg-(--active) transition-colors col-span-2"
-                    onClick={() => {
-                      if (!meshRef.current || !materialRef.current) return;
-                      materialRef.current.dispose();
-                      materialRef.current = createMaterial(vertexCode, fragmentCode);
-                      meshRef.current.material = materialRef.current;
-                    }}
-                  >
-                    <p className="text-xs lg:text-sm">Reset Uniforms</p>
-                  </button>
 
                   {/* Example buttons */}
                   <button
